@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>Hiring Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<style>
+        body {
+            background: #303030;
+            color: #eaeaea;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+        .navbar {
+            background-color: #2c2c2c;
+            padding: 5px 25px;
+            box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
+        }
+        .input-container {
+            background-color: #3a3a3a;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .custom-file {
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .custom-file-input {
+            font-size: 16px;
+            padding: 10px 20px;
+        }
+        .custom-file-label::after {
+            content: "Upload";
+            background-color: #08538c;
+            border: 1px solid #08538c;
+            font-size: 16px;
+            padding: 5px 15px;
+            color: #eaeaea;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .custom-file-input:hover ~ .custom-file-label::after {
+            background-color: #553a99;
+            border-color: #553a99;
+        }
+        .img-container {
+            text-align: center;
+            margin: 110px 0;
+        }
+        .btn-info {
+            background-color: #553a99;
+            border-color: #08538c;
+            color: #ffffff;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .btn-info:hover, .btn-info:focus, .btn-info:active {
+            background-color: #08538c;
+            border-color: #08538c;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-info:disabled {
+            background-color: #553a99;
+            border-color: #553a99;
+            opacity: 0.7;
+        }
+        .alert {
+            border-radius: 5px;
+            font-weight: 500;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .footer {
+            background-color: #303030;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #eaeaea;
+            margin-left: 20px;
+        }
+    
+<style>
+    body {
+        background-color: #303030 !important;
+        color: #eaeaea !important;
+        font-family: 'Arial', sans-serif;
+    }
+    select {
+        color: #333;
+        font-size: 17px;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        background-color: #f9f9f9;
+    }
+    table.dataTable {
+        border: 1px solid #eaeaea !important; /* Border around the entire table */
+    }
+    table.dataTable thead th {
+        background-color: #505050 !important;
+        color: #eaeaea !important;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        border-right: 1px solid #eaeaea !important; /* Vertical line in header */
+    }
+    table.dataTable thead th:last-child {
+        border-right: none !important; /* Remove border for the last header cell */
+    }
+    table.dataTable tbody td {
+        background-color: #303030 /*!important*/;
+        color: #eaeaea !important;
+        font-size: 13px;
+        text-align: center;
+        border-right: 1px solid #eaeaea !important; /* Vertical line in body cells */
+    }
+    table.dataTable tbody td:last-child {
+        border-right: none !important; /* Remove border for the last body cell in each row */
+    }
+    .div-text {
+        color: #eaeaea !important;
+        font-size: 18px;
+        padding: 10px;
+    }
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select {
+        color: #eaeaea !important;
+        background-color: #505050 !important;
+        border: 1px solid #eaeaea !important;
+    }
+    .dataTables_wrapper .dataTables_filter label,
+    .dataTables_wrapper .dataTables_length label {
+        color: #eaeaea !important;
+    }
+	
+	.dataTables_info {
+        color: #eaeaea !important;
+    }
+       .dataTables_wrapper .dataTables_paginate .paginate_button {
+        background-color: #505050 !important;
+        color: #eaeaea !important;
+        border: 1px solid #eaeaea !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background-color: #707070 !important;
+        color: #ffffff !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        background-color: #707070 !important;
+        color: #ffffff !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background-color: #707070 !important;
+        color: #ffffff !important;
+        border: 1px solid #eaeaea !important;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, 
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        background-color: #505050 !important;
+        color: #757575 !important;
+        border: 1px solid #757575 !important;
+    }
+	.dataTables_wrapper tr.odd td {
+    background-color: #3a3a3a;
+    }
+
+    .dataTables_wrapper tr.even td {
+    background-color: #2c2c2c;
+    }
+	table.dataTable td:focus {
+    background-color: #2c2c2c !important;
+    color: #eaeaea !important;
+}
+    .dataTables_wrapper tr:hover td {
+        background-color: #505050 !important;
+        color: #eaeaea !important;
+    }
+	table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
+    background-color: #505050 !important;
+   }
+    table.dataTable thead th.sorting_1,
+    table.dataTable thead th.sorting_2,
+    table.dataTable thead th.sorting_3,
+    table.dataTable tbody td.sorting_1,
+    table.dataTable tbody td.sorting_2,
+    table.dataTable tbody td.sorting_3 {
+        background-color: #3a3a3a !important; /* Dark grey background */
+        color: #ffffff !important; /* White text */
+}
+
+
+</style>
+
+<style>
+        .table-heading {
+		    font-family: 'Arial', sans-serif; /* Set Font to Arial */
+			font-size: 20px; /* Set the font size */
+            text-align: center;
+            color: #eaeaea; 
+            padding: 10px 0; /* Adjust the padding as needed */
+        }
+    </style>
+<style>
+    #example_wrapper {
+        width: 95%;
+        margin: auto;
+    }
+</style>
+
+<style>
+    .table-container {
+            margin-bottom: 150px !important; /* Padding at the bottom of DataTable */
+        }
+		
+    .table-container #myTable_wrapper {
+        width: 95%;
+        margin: auto;		
+    }
+</style>
+
+</style>
+</link></head>
+<body>
+<nav class="navbar">
+<a class="navbar-brand" href="#">
+<img alt="BT Logo" height="70" src="{{ url_for('static', filename='BT_logo_modified.png') }}" width="70"/>
+</a>
+<a class="navbar-brand ml-auto">
+<img alt="BT Group Logo" height="50" src="{{ url_for('static', filename='BT_Group_icon_new.png') }}" width="156.66"/>
+</a>
+</nav>
+<div class="input-container">
+<h2 class="mb-4 text-center">Hiring Dashboard</h2>
+<form action="/" class="mb-4" enctype="multipart/form-data" method="post">
+<div class="custom-file mb-3">
+<input class="custom-file-input" id="customFile" name="file" type="file"/>
+<label class="custom-file-label" for="customFile">Choose file</label>
+</div>
+<div class="mt-2 d-flex justify-content-between">
+<input class="btn btn-info" type="submit" value="Generate Visualizations"/>
+<a class="btn btn-info" href="/download_pdf">Export as PDF</a>
+</div>
+</form>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% elif images %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+</div>
+
+{% if images %}
+    <!-- Visualization Containers -->
+<div class="img-container">
+<img src="data:image/png;base64,{{ images[2] }}" style="width: 49%; vertical-align: top;"/>
+<img src="data:image/png;base64,{{ images[6] }}" style="width: 49%; vertical-align: top;"/>
+</div>
+<div class="img-container">
+<img src="data:image/png;base64,{{ images[1] }}" style="width: 49%; vertical-align: top;"/>
+<img src="data:image/png;base64,{{ images[0] }}" style="width: 49%; vertical-align: top;"/>
+</div>
+<div class="img-container">
+<img src="data:image/png;base64,{{ images[7] }}" style="width: 49%; vertical-align: top;"/>
+<img src="data:image/png;base64,{{ images[8] }}" style="width: 49%; vertical-align: top;"/>
+</div>
+<div class="img-container">
+<!-- <img src="data:image/png;base64,{{ images[3] }}" style="width: 95%;"/> -->
+<iframe src="/plotly_graph" width="95%" height="900" frameborder="0"></iframe>
+</div>
+<!-- DataTable Container -->
+<div class="table-container">
+    <h2 class="table-heading">Hiring Status Across Business Units</h2>
+    <div class="div-text">
+        Select Unit:
+        <select id="unit-filter">
+		     <option value="all">All</option>
+            {% for unit in units %}
+                <option value="{{ unit }}">{{ unit }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <table class="display" id="myTable"></table>
+
+
+
+{% endif %}
+
+<div class="footer">
+<p>For any questions or comments on above Visualizations please contact: Anjana Subramanya</p>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#myTable').DataTable({
+    ajax: {
+        url: '/get_data/all',
+        dataSrc: ''
+    },
+    autoWidth: true,
+	pageLength: 25, // Set default number of rows to 25
+    columns: [
+        { title: 'Unit', data: 'Unit' },
+        { title: 'Senior Manager', data: 'Senior Manager' },
+        { title: 'Hiring Manager', data: 'Hiring Manager' },
+        { title: 'Tranche', data: 'Tranche' },
+        { title: 'Total Roles', data: 'Total Roles' },
+        { title: 'Cancelled', data: 'Cancelled' },
+        { title: 'Interviews', data: 'Interviews' },
+        { title: 'Joined', data: 'Joined' },
+        { title: 'Offered', data: 'Offered' },
+        { title: 'On Hold', data: 'On Hold' },
+        { title: 'Sourcing', data: 'Sourcing' },
+        { title: 'To Be Offered', data: 'To Be Offered' }
+    ]
+});
+        
+        $('#unit-filter').on('change', function() {
+            var unit = $(this).val();
+            var url = unit === 'all' ? '/get_data/all' : '/get_data/' + unit;
+            table.ajax.url(url).load();
+        });
+    });
+</script>
+</body>
+</html>
